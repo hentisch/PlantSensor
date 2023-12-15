@@ -1,6 +1,7 @@
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
+#include <Wire.h>
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
@@ -26,15 +27,11 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Starting BLE work!");
 
+  Wire.begin();
+
   BLEDevice::init("Plant Sensor");
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
-
-  // BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-  //                                        CHARACTERISTIC_UUID,
-  //                                        BLECharacteristic::PROPERTY_READ |
-  //                                        BLECharacteristic::PROPERTY_WRITE
-  //                                      );
 
   ambient_temperature = pService->createCharacteristic(
     AMBIENT_TEMPERATURE_CHARACTERISTIC_UUID,
@@ -42,8 +39,6 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE
   );
 
-  byte values[] = {0x2, 0x3, 0x69};
-  ambient_temperature->setValue(values, sizeof(values));
   pService->start();
   // BLEAdvertising *pAdvertising = pServer->getAdvertising();  // this still is working for backward compatibility
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
