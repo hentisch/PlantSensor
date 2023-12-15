@@ -1,9 +1,3 @@
-/*
-    Based on Neil Kolban example for IDF: https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/tests/BLE%20Tests/SampleServer.cpp
-    Ported to Arduino ESP32 by Evandro Copercini
-    updates by chegewara
-*/
-
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
@@ -11,16 +5,22 @@
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
-#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 
 BLECharacteristic *ambient_temperature; //Ambient Temperature
+#define AMBIENT_TEMPERATURE_CHARACTERISTIC_UUID "87fd32ec-9e46-439a-9c27-957b8acf8fcd"
+
 BLECharacteristic *soil_temperature; //Ambient Temperature
+#define SOIL_TEMPERATURE_CHARACTERISTIC_UUID "70e8cb3c-4a0d-445b-96ab-70850a150c76"
 
 BLECharacteristic *humidity; //Ambient Humidity
+#define HUMIDITY "668ede41-62e8-4a78-a901-53b8df6b1644"
+
 BLECharacteristic *moisture; //Ambient moisture
+#define MOISTURE "91a5addf-0c0e-4c1d-a6cb-e43d59e1f73e"
 
 BLECharacteristic *light_spectrum;
+#define LIGHT_SPECTRUM "774c3ae8-f76a-4cb6-aaba-dcf19ce383fc"
 
 void setup() {
   Serial.begin(115200);
@@ -30,23 +30,20 @@ void setup() {
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
 
-  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-                                         CHARACTERISTIC_UUID,
-                                         BLECharacteristic::PROPERTY_READ |
-                                         BLECharacteristic::PROPERTY_WRITE
-                                       );
+  // BLECharacteristic *pCharacteristic = pService->createCharacteristic(
+  //                                        CHARACTERISTIC_UUID,
+  //                                        BLECharacteristic::PROPERTY_READ |
+  //                                        BLECharacteristic::PROPERTY_WRITE
+  //                                      );
 
   ambient_temperature = pService->createCharacteristic(
-    CHARACTERISTIC_UUID
-  )
+    AMBIENT_TEMPERATURE_CHARACTERISTIC_UUID,
+    BLECharacteristic::PROPERTY_READ |
+    BLECharacteristic::PROPERTY_WRITE
+  );
 
-//  byte array[] = {0x11, 0xa3};
-
-  int number = 12;
-  characteristics = malloc((int*) sizeof(number));
-  characteristics[0] = number;
-  byte values[] = {0x23, 0x12, 0x69};
-  pCharacteristic->setValue(values, sizeof(values));
+  byte values[] = {0x2, 0x3, 0x69};
+  ambient_temperature->setValue(values, sizeof(values));
   pService->start();
   // BLEAdvertising *pAdvertising = pServer->getAdvertising();  // this still is working for backward compatibility
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
@@ -60,5 +57,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  int random_value = rand() % (0xFF+1);
+  byte values[] = {random_value};
+  ambient_temperature->setValue(values, sizeof(values));
   delay(2000);
 }
