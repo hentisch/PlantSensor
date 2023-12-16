@@ -27,8 +27,6 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Starting BLE work!");
 
-  Wire.begin();
-
   BLEDevice::init("Plant Sensor");
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
