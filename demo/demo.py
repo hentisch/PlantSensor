@@ -26,7 +26,7 @@ async def main():
             spectrum_array = [int(x) for x in spectrum.split(',')]
             plt.bar(range(8), spectrum_array, width=1, tick_label=[str(wavelength) + "nm" for wavelength in wavelengths], color=[wavelength_to_rgb(wavelength) for wavelength in wavelengths])
             plt.title(f"Temperature: {temperature} | Humidity: {humidity}")
-            plt.xlabel("Light Wavelength (nm)")
+            plt.xlabel("Wavelength (nm)")
             plt.ylabel("Brightness (Unitless)")
             plt.annotate("43C", (10, 10))
             plt.draw()
