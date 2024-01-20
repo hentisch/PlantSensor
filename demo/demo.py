@@ -14,9 +14,18 @@ async def main():
             spectrum = await client.read_gatt_char("774c3ae8-f76a-4cb6-aaba-dcf19ce383fc")
             spectrum = "{0}".format("".join(map(chr, spectrum)))
 
+            temperature = await client.read_gatt_char("87fd32ec-9e46-439a-9c27-957b8acf8fcd")
+            temperature = float("{0}".format("".join(map(chr, temperature))))
+            temperature = str(round(temperature(3))) + "°C"
+
+            humidity = await client.read_gatt_char("668ede41-62e8-4a78-a901-53b8df6b1644")
+            humidity = float("{0}".format("".join(map(chr, humidity))))
+            humidity = str(round(humidity, 3))
+
 
             spectrum_array = [int(x) for x in spectrum.split(',')]
             plt.bar(range(8), spectrum_array, width=1, tick_label=[str(wavelength) + "nm" for wavelength in wavelengths], color=[wavelength_to_rgb(wavelength) for wavelength in wavelengths])
+            plt.title(f"Temperature: {temperature} | Humidity: {humidity}")
             plt.annotate("43C", (10, 10))
             plt.draw()
             plt.pause(0.0001)
