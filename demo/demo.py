@@ -16,7 +16,7 @@ async def main():
 
             temperature = await client.read_gatt_char("87fd32ec-9e46-439a-9c27-957b8acf8fcd")
             temperature = float("{0}".format("".join(map(chr, temperature))))
-            temperature = str(round(temperature, 2)) + "°C"
+            temperature = f"{str(round(temperature, 2))} °C ({str(round(temperature*(9/5)+32, 2))} °F)"
 
             humidity = await client.read_gatt_char("668ede41-62e8-4a78-a901-53b8df6b1644")
             humidity = float("{0}".format("".join(map(chr, humidity))))
